@@ -1,7 +1,6 @@
 'use strict';
 
 var debug = require('debug');
-var jsonfile = require('jsonfile');
 var merge = require('merge');
 var debug = debug('full-text-search-light');
 
@@ -39,48 +38,6 @@ FullTextSearchLight.prototype.init = function () {
     for (var i = 0; i < this.config.index_amount; i++) {
         this.indexes.push(Object.create(null));
     }
-};
-
-
-FullTextSearchLight.load = function (path, callback) {
-    jsonfile.readFile(path, null, function (error, dataObject) {
-
-        if (error) {
-            callback(error);
-            return;
-        }
-
-        var instance = new FullTextSearchLight(dataObject.config);
-        instance.indexes = dataObject.indexes;
-        instance.data = dataObject.data;
-        instance.data_ptr = dataObject.data_ptr;
-        instance.free_slots = dataObject.free_slots;
-        instance.single_data_counter = dataObject.single_data_counter;
-
-        callback(null, instance);
-    });
-};
-
-FullTextSearchLight.loadSync = function (path) {
-    var dataObject = jsonfile.readFileSync(path);
-
-    var instance = new FullTextSearchLight(dataObject.config);
-
-    instance.indexes = dataObject.indexes;
-    instance.data = dataObject.data;
-    instance.data_ptr = dataObject.data_ptr;
-    instance.free_slots = dataObject.free_slots;
-    instance.single_data_counter = dataObject.single_data_counter;
-
-    return instance;
-};
-
-FullTextSearchLight.prototype.save = function (path, callback) {
-    jsonfile.writeFile(path, this, null, callback);
-};
-
-FullTextSearchLight.prototype.saveSync = function (path) {
-    jsonfile.writeFileSync(path, this);
 };
 
 FullTextSearchLight.prototype.index_amount = function (amount) {
